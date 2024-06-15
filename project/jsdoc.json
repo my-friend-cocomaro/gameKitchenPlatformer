@@ -1,0 +1,10 @@
+{
+    "source": {
+        "include": ["assets/scripts"],
+        "includePattern": ".+\\.ts$",
+        "excludePattern": "(^|\\/|\\\\)_"
+    },
+    "opts": {
+        "destination": "./docs"
+    }
+}

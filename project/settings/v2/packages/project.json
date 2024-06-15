@@ -1,0 +1,61 @@
+{
+  "__version__": "1.0.6",
+  "physics": {
+    "collisionGroups": [
+      {
+        "index": 1,
+        "name": "player"
+      },
+      {
+        "index": 2,
+        "name": "enemy"
+      },
+      {
+        "index": 3,
+        "name": "enemy obj"
+      },
+      {
+        "index": 4,
+        "name": "items"
+      },
+      {
+        "index": 5,
+        "name": "walls"
+      },
+      {
+        "index": 6,
+        "name": "background"
+      }
+    ],
+    "collisionMatrix": {
+      "0": 1,
+      "1": 124,
+      "2": 34,
+      "3": 34,
+      "4": 34,
+      "5": 94,
+      "6": 34
+    }
+  },
+  "layer": [
+    {
+      "name": "player",
+      "value": 1
+    },
+    {
+      "name": "background",
+      "value": 2
+    }
+  ],
+  "sorting-layer": {
+    "layers": [
+      {
+        "id": 0,
+        "name": "default",
+        "value": 0
+      }
+    ],
+    "increaseId": 2
+  },
+  "custom_joint_texture_layouts": []
+}
