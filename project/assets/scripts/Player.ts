@@ -1,16 +1,12 @@
 import { _decorator, Collider2D, Component, Input, Node, RigidBody2D, Vec2, Vec3 } from 'cc';
-import { CollisionGroup } from './constants';
+import eventBus, { CollisionGroup, ItemEvents } from './constants';
 const { ccclass, property } = _decorator;
-
-/*
- model -> keep date
-     and have funcion to call
-*/
 
 @ccclass('Player')
 export class Player extends Component {
+    playerTarget: EventTarget; 
     body: RigidBody2D = null;
-    collider: Collider2D = null;
+    // collider: Collider2D = null;
 
     private speed: number = 11;
     private jumpForce: Vec2 = new Vec2(0, 40);
@@ -21,10 +17,26 @@ export class Player extends Component {
 
     private items: Node[] = []; 
 
+    onLoad() {
+        this.body = this.node.getComponent(RigidBody2D);
+        // this.collider = this.node.getComponent(Collider2D);
+    }
+
+    onDestroy() {
+    }
+
+    //
+    public get_Speed() {
+        return this.speed;
+    }
+
     public set_x_Direction(x : number) {
         this.direction.x = x;
     } 
 
+    public get_x_Direction() {
+        return this.direction.x;
+    }
 
     /**
      * Устанавливает состояние нахождения на земле.
@@ -33,7 +45,6 @@ export class Player extends Component {
     public setGrounded(isGrounded: boolean) {
         this.isOnGround = isGrounded;
     }
-
 
     /**
      * Получает состояние нахождения на земле.
@@ -44,18 +55,12 @@ export class Player extends Component {
     }
 
 
-    onLoad() {
-        this.body = this.node.getComponent(RigidBody2D);
-        this.collider = this.node.getComponent(Collider2D);
-    }
 
-    onDestroy() {
-    }
-
-    /*
-     * Обработка прыжка игрока.
+    /**
+     * прыжок игрока.
      */
-    jump() { 
+    jump() {
+        if (!this.isOnGround) return;
         this.body.applyLinearImpulse(this.jumpForce, this.body.getWorldCenter(), true);
         this.isOnGround = false;
     }
@@ -74,20 +79,8 @@ export class Player extends Component {
         node.active = true;
         node.setPosition(v3.x + this.itemSpace, v3.y, v3.z);
         //
-    }
-    
-    /**
-     * Обновление состояния компонента.
-     * @param {number} deltaTime - Время с последнего обновления.
-     */
-    update(deltaTime: number) {
-        const velocity = this.body.linearVelocity;
-        velocity.x = this.direction.x * this.speed;
-        this.body.linearVelocity = velocity;
+        eventBus.emit(ItemEvents.SPAWN, node.position.x);
     }
 }
 
-
-/*
-разобраться с exlint и jsdoc - автодокуметирование
-*/
+// разобраться с exlint и jsdoc - автодокуметирование

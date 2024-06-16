@@ -9,68 +9,25 @@ const { ccclass, property } = _decorator;
  */
 @ccclass('PlayerMovement')
 export class PlayerMovement extends Component {
-    @property(Player)
-    player: Player;   
-
-    private keyState: { [key: number]: boolean } = {}; // что это за объект?
-
+    private body: RigidBody2D = null;
+    private player: Player = null;
     /**
      * Инициализация компонента. Настройка обработчиков событий.
      */
     onLoad() {
         console.log("Movements is inited");
-
-        input.on(Input.EventType.KEY_DOWN, this.onKeyDown, this);
-        input.on(Input.EventType.KEY_UP, this.onKeyUp, this);
+        //
+        this.body = this.node.getComponent(RigidBody2D);
+        this.player = this.node.getComponent(Player);
     }
-
-
+   
     /**
-     * Очистка обработчиков событий при уничтожении компонента.
+     * Обновление состояния компонента.
+     * @param {number} deltaTime - Время с последнего обновления.
      */
-    onDestroy() {
-        input.off(Input.EventType.KEY_DOWN, this.onKeyDown, this);
-        input.off(Input.EventType.KEY_UP, this.onKeyUp, this);
-    }
-
-
-    /**
-     * Обработчик события нажатия клавиши.
-     * @param {EventKeyboard} event - Событие клавиатуры.
-     */
-    onKeyDown(event: EventKeyboard) {
-        if(event.keyCode == KeyCode.SPACE
-           && this.player.getGrounded()) {
-            this.player.jump();
-        }
-
-        this.keyState[event.keyCode] = true;
-        this.updateDirection();
-    }
-    
-
-    /**
-     * Обработчик события отпускания клавиши.
-     * @param {EventKeyboard} event - Событие клавиатуры.
-     */
-    onKeyUp(event: EventKeyboard) {
-        this.keyState[event.keyCode] = false;
-        this.updateDirection();
-    }
-
-
-    /**
-     * Обновление направления движения игрока. Есть мультитачинг
-     */
-    updateDirection() {
-        if (this.keyState[KeyCode.KEY_A] && this.keyState[KeyCode.KEY_D]) {
-            this.player.set_x_Direction(0);
-        } else if (this.keyState[KeyCode.KEY_A]) {
-            this.player.set_x_Direction(-1);
-        } else if (this.keyState[KeyCode.KEY_D]) {
-            this.player.set_x_Direction(1);
-        } else {
-            this.player.set_x_Direction(0);
-        }
+    update(deltaTime: number) {
+        const velocity = this.body.linearVelocity;
+        velocity.x = this.player.get_x_Direction() * this.player.get_Speed();
+        this.body.linearVelocity = velocity;
     }
 }
