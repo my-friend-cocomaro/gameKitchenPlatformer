@@ -13,8 +13,20 @@ export enum TortleState {
     MOVE = 'move',
 }
 
+export enum TortleAnim {
+    appearance = 'pan_tortle_appearance',
+    dissapearance = 'pan_tortle_dissapearance',
+    eat_leaf = 'pan_tortle_eat_leaf',
+    walk = 'pan_tortle_walk'
+}
+
+
 export enum ItemEvents {
     SPAWN,
+}
+
+export enum TortleEvents {
+    CHANGEPOS,
 }
 
 const eventBus = new EventTarget();
