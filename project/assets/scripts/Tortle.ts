@@ -28,7 +28,7 @@ export class Tortle extends Component {
     
     // костыль для последовательных анимаций
     onAnimationFinished(event: Animation.EventType, state: any) {
-        console.log('Animation Finished');
+        // console.log('Animation Finished');
         console.log(state.name);
         if (state.name == TortleAnim.appearance) {
             console.log('tortle is moving');

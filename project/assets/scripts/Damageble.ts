@@ -7,33 +7,46 @@ const { ccclass, property } = _decorator;
  */
 @ccclass('Damageble')
 export class Damageble extends Component {
-    @property(CCInteger)
-    private hitPoints: number = 0;
+    private hitPoints: number;
 
     @property(CCInteger)
     private maxHitPoints: number = 0;
 
     // start() {
     // }
+    onLoad() {
+        this.hitPoints = this.maxHitPoints;
+    }
 
     get HitPoints() {
         return this.hitPoints;
     }
 
+    /** 
+     * change hit points counter
+     * @param hitPoints_count - number of received damage
+     * @returns isDead boolean value 
+     */
+
     takeDamage(hitPoints_count: number) {
         this.hitPoints -= hitPoints_count;
+        console.log(this.hitPoints);
         if (this.hitPoints == 0) {
-            // ?? событие смерти
+            // ?? событие смерт
+            return true
         }
+        return false
     }
 
-    heal(hitPoints_count: number) {
-        this.hitPoints += hitPoints_count;
-        if(this.hitPoints > this.maxHitPoints){
-            this.hitPoints = this.maxHitPoints;
-        } 
-    }
-
+    //
+    // heal(hitPoints_count: number) {
+    //     this.hitPoints += hitPoints_count;
+    //     if(this.hitPoints > this.maxHitPoints){
+    //         this.hitPoints = this.maxHitPoints;
+    //     } 
+    // }
+    //
+    
     // update(deltaTime: number) {
         
     // }

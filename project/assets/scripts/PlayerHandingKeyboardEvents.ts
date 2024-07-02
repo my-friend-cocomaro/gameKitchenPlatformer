@@ -1,6 +1,6 @@
-import { _decorator, Component, EventKeyboard, input, Input, KeyCode, Node, Vec3 } from 'cc';
+import { _decorator, Component,Animation, EventKeyboard, input, Input, KeyCode, Node, Vec3 } from 'cc';
 import { Player } from './Player';
-import eventBus, { ItemEvents } from './constants';
+import eventBus, { ItemEvents, PlayerAnim } from './constants';
 const { ccclass, property } = _decorator;
 
 /***
@@ -12,6 +12,7 @@ export class PlayerHandingKeyboardEvents extends Component {
     // @property(Player)
     private player: Player = null;  
     private keyState: { [key: number]: boolean } = {};
+    private animation: Animation;
 
     /**
      * Инициализация компонента. Настройка обработчиков событий.
@@ -19,6 +20,9 @@ export class PlayerHandingKeyboardEvents extends Component {
     onLoad() {
         console.log("Actions is inited");
         this.player = this.node.getComponent(Player);
+        this.animation = this.node.getComponent(Animation);
+        //
+        this.animation.on(Animation.EventType.FINISHED, this.onAnimFinished, this);
         //
         input.on(Input.EventType.KEY_DOWN, this.onKeyDown, this);
         input.on(Input.EventType.KEY_UP, this.onKeyUp, this);
@@ -33,10 +37,20 @@ export class PlayerHandingKeyboardEvents extends Component {
         input.off(Input.EventType.KEY_UP, this.onKeyUp, this);
     }
 
+    tmp_attack_finished: boolean = true;
+    onAnimFinished(event: Animation.EventType, state: any) {
+        if (state.name == PlayerAnim.attack) {
+            this.tmp_attack_finished = true;
+        } else {
+            this.tmp_attack_finished = true; // костыль !!!ы
+        }
+    }
 
     onKeyDown(event: EventKeyboard) {
         switch(event.keyCode) {
             case KeyCode.KEY_F:
+                if (this.player.items.length == 0) break;
+                //
                 this.player.putItem(
                     this.player.node.getPosition()
                 );
@@ -44,12 +58,16 @@ export class PlayerHandingKeyboardEvents extends Component {
             case KeyCode.SPACE:
                 this.player.jump();
                 break;
+            case KeyCode.KEY_J:
+                if (!this.tmp_attack_finished) break;
+                //
+                this.player.attack();
+                this.tmp_attack_finished = false;
         }
         //  
         this.keyState[event.keyCode] = true;
         this.updateDirection();
     }
-
 
     /**
      * Обработчик события отпускания клавиши.
